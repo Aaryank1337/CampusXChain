@@ -15,6 +15,7 @@ import {
   Award,
   TrendingUp
 } from 'lucide-react';
+import { Link } from 'react-router-dom'; 
 import Navbar from '../components/Navbar';
 
 const Homepage = () => {
@@ -132,7 +133,9 @@ const Homepage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <button className="group px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full text-lg font-semibold hover:scale-105 transform transition-all duration-300 shadow-2xl hover:shadow-purple-500/25">
               <span className="flex items-center space-x-2">
+                <Link to="/auth">
                 <span>Start Your Journey</span>
+                </Link>
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
             </button>
