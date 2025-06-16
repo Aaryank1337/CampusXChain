@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { 
   Menu, 
   X, 
@@ -11,14 +11,31 @@ import {
   Vote,
   BookOpen,
   ShoppingBag,
-  ChevronDown
+  ChevronDown,
+  Copy,
+  ExternalLink,
+  LogOut
 } from 'lucide-react';
+import { useWallet } from '../context/WalletContext';
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [walletConnected, setWalletConnected] = useState(false);
+  const [showWalletDropdown, setShowWalletDropdown] = useState(false);
+  
+  const { 
+    walletAddress, 
+    balance, 
+    chainId, 
+    isConnecting, 
+    error, 
+    isConnected, 
+    connectWallet, 
+    disconnectWallet,
+    isMetaMaskInstalled
+  } = useWallet();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,6 +62,35 @@ const Navbar = () => {
 
   const toggleDropdown = (index) => {
     setActiveDropdown(activeDropdown === index ? null : index);
+  };
+
+  const formatAddress = (address) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    // You could add a toast notification here
+  };
+
+  const getChainName = (chainId) => {
+    const chains = {
+      '0x1': 'Ethereum Mainnet',
+      '0x3': 'Ropsten',
+      '0x4': 'Rinkeby',
+      '0x5': 'Goerli',
+      '0x89': 'Polygon',
+      '0xa86a': 'Avalanche'
+    };
+    return chains[chainId] || 'Unknown Network';
+  };
+
+  const handleWalletConnect = async () => {
+    if (!isMetaMaskInstalled()) {
+      window.open('https://metamask.io/download/', '_blank');
+      return;
+    }
+    await connectWallet();
   };
 
   return (
@@ -125,20 +171,95 @@ const Navbar = () => {
             </button>
 
             {/* Wallet Connection */}
-            {walletConnected ? (
-              <div className="flex items-center space-x-3 px-4 py-2 bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-sm rounded-full border border-purple-500/30">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-sm text-gray-300">Connected</span>
-                <div className="text-purple-400">
-                  <Wallet className="w-4 h-4" />
-                </div>
+            {isConnected ? (
+              <div className="relative">
+                <button 
+                  onClick={() => setShowWalletDropdown(!showWalletDropdown)}
+                  className="flex items-center space-x-3 px-4 py-2 bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-sm rounded-full border border-purple-500/30 hover:border-purple-400/50 transition-all duration-200"
+                >
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                  <span className="text-sm text-gray-300">{formatAddress(walletAddress)}</span>
+                  <div className="text-purple-400">
+                    <Wallet className="w-4 h-4" />
+                  </div>
+                </button>
+
+                {/* Wallet Dropdown */}
+                {showWalletDropdown && (
+                  <div className="absolute top-full right-0 mt-2 w-80 bg-gray-800/95 backdrop-blur-lg rounded-xl border border-white/10 shadow-2xl">
+                    <div className="p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-white font-semibold">Wallet Info</h3>
+                        <button
+                          onClick={() => setShowWalletDropdown(false)}
+                          className="text-gray-400 hover:text-white"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                          <span className="text-gray-400 text-sm">Address:</span>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-white text-sm font-mono">{formatAddress(walletAddress)}</span>
+                            <button
+                              onClick={() => copyToClipboard(walletAddress)}
+                              className="text-purple-400 hover:text-purple-300"
+                            >
+                              <Copy className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {balance && (
+                          <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                            <span className="text-gray-400 text-sm">Balance:</span>
+                            <span className="text-white text-sm font-mono">{balance} ETH</span>
+                          </div>
+                        )}
+                        
+                        {chainId && (
+                          <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                            <span className="text-gray-400 text-sm">Network:</span>
+                            <span className="text-white text-sm">{getChainName(chainId)}</span>
+                          </div>
+                        )}
+                        
+                        <div className="pt-2 border-t border-white/10">
+                          <button
+                            onClick={() => {
+                              window.open(`https://etherscan.io/address/${walletAddress}`, '_blank');
+                            }}
+                            className="w-full flex items-center justify-center space-x-2 p-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            <span>View on Etherscan</span>
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              disconnectWallet();
+                              setShowWalletDropdown(false);
+                            }}
+                            className="w-full flex items-center justify-center space-x-2 p-3 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-all duration-200"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            <span>Disconnect</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <button 
-                onClick={() => setWalletConnected(true)}
-                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-purple-500/25"
+                onClick={handleWalletConnect}
+                disabled={isConnecting}
+                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-purple-500/25"
               >
-                Connect Wallet
+                {isConnecting ? 'Connecting...' : isMetaMaskInstalled() ? 'Connect Wallet' : 'Install MetaMask'}
               </button>
             )}
 
@@ -157,6 +278,13 @@ const Navbar = () => {
           </button>
         </div>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-500/10 border-b border-red-500/20 px-4 py-2">
+          <p className="text-red-400 text-sm text-center">{error}</p>
+        </div>
+      )}
 
       {/* Mobile Menu */}
       <div className={`md:hidden transition-all duration-300 ${
@@ -218,18 +346,31 @@ const Navbar = () => {
                 <div className="ml-auto w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
               </button>
 
-              {walletConnected ? (
-                <div className="flex items-center space-x-3 p-3 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-lg border border-purple-500/30">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                  <span className="text-gray-300">Wallet Connected</span>
-                  <Wallet className="w-4 h-4 text-purple-400 ml-auto" />
+              {isConnected ? (
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-3 p-3 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-lg border border-purple-500/30">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                    <div className="flex-1">
+                      <div className="text-gray-300 text-sm">Connected</div>
+                      <div className="text-gray-400 text-xs font-mono">{formatAddress(walletAddress)}</div>
+                    </div>
+                    <Wallet className="w-4 h-4 text-purple-400" />
+                  </div>
+                  
+                  <button 
+                    onClick={disconnectWallet}
+                    className="w-full p-3 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-all duration-300"
+                  >
+                    Disconnect Wallet
+                  </button>
                 </div>
               ) : (
                 <button 
-                  onClick={() => setWalletConnected(true)}
-                  className="w-full p-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg text-white font-medium transition-all duration-300"
+                  onClick={handleWalletConnect}
+                  disabled={isConnecting}
+                  className="w-full p-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 rounded-lg text-white font-medium transition-all duration-300"
                 >
-                  Connect Wallet
+                  {isConnecting ? 'Connecting...' : isMetaMaskInstalled() ? 'Connect Wallet' : 'Install MetaMask'}
                 </button>
               )}
 
@@ -244,5 +385,4 @@ const Navbar = () => {
     </nav>
   );
 };
-
 export default Navbar;
