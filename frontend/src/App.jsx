@@ -1,14 +1,17 @@
 import React from "react";
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Homepage from "./pages/home";
-function App(){
-  return(
-<BrowserRouter>
-      <Routes>
-        
-         <Route path="/" element={<Homepage/>}></Route>
+import { BlockchainProvider } from "./context/BlockchainContext";
+
+function App() {
+  return (
+    <BlockchainProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Homepage />}></Route>
         </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+    </BlockchainProvider>
   );
 }
 export default App;
