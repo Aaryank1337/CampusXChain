@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { ethers } from "ethers";
-import CampTokenAbi from "../abi/CampToken.json";
-import CampusDAOAbi from "../abi/CampusDAO.json";
-import FeeManagerAbi from "../abi/FeeManager.json";
-import EventNFTAbi from "../abi/EventNFT.json";
+import CampTokenAbi from "../abis/CampToken.json";
+import CampusDAOAbi from "../abis/CampusDAO.json";
+import FeeManagerAbi from "../abis/FeeManager.json";
+import EventNFTAbi from "../abis/EventNFT.json";
 
 const Web3Context = createContext();
 
