@@ -31,7 +31,8 @@ const CampusXChainApp = () => {
     mintPOAP,
     createProposal,
     vote,
-    getUserNFTs
+    getUserNFTs,
+    getPaymentStatus // Import the correct function name
   } = useWeb3();
 
   const { isConnected, connectWallet } = useWallet();
@@ -70,7 +71,8 @@ const CampusXChainApp = () => {
       }
       
       if (feeManager && account) {
-        const status = await feeManager.hasPaid(account);
+        // Use the correct function name from context
+        const status = await getPaymentStatus(account);
         setPaymentStatus(status);
       }
 
@@ -86,7 +88,6 @@ const CampusXChainApp = () => {
 
   const fetchProposals = async () => {
     try {
-      setLoading(true);
       const fetchedProposals = [];
       
       const count = await campusDAO.proposalCount();
@@ -116,8 +117,6 @@ const CampusXChainApp = () => {
       setProposals(fetchedProposals);
     } catch (error) {
       console.error('Error fetching proposals:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -246,6 +245,8 @@ const CampusXChainApp = () => {
                   fetchUserData={fetchUserData}
                   loading={loading}
                   setLoading={setLoading}
+                  paymentStatus={paymentStatus}
+                  campBalance={campBalance}
                 />
               )}
 

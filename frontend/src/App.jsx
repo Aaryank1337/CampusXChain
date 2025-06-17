@@ -4,6 +4,7 @@ import Homepage from "./pages/home";
 import CampusXChain from "./pages/camptoken";
 
 import Auth from "./pages/Auth";
+import CampusXChainApp from "./pages/camptoken";
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Homepage />}></Route>
-           <Route path="/camp" element={<CampusXChain/>}></Route>
+           <Route path="/camp" element={<CampusXChainApp/>}></Route>
           <Route path="/auth" element={<Auth/>}></Route>
         </Routes>
       </BrowserRouter>
