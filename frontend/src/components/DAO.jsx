@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 import { Plus, Vote, Check, X, Loader } from 'lucide-react';
 
-export const DAO = ({ proposals, loading, onCreateProposal, onVote, onRefreshProposals }) => {
+export const DAO = ({ 
+  proposals, 
+  loading, 
+  setLoading,
+  createProposal,    // Changed from onCreateProposal
+  vote,              // Changed from onVote
+  fetchProposals,    // Changed from onRefreshProposals
+  formatAddress,
+  formatTimestamp
+}) => {
   const [proposalForm, setProposalForm] = useState({ description: '', duration: '' });
   const [voteForm, setVoteForm] = useState({ proposalId: '', support: true });
 
@@ -10,8 +19,19 @@ export const DAO = ({ proposals, loading, onCreateProposal, onVote, onRefreshPro
       alert('Please fill in all fields');
       return;
     }
-    await onCreateProposal(proposalForm.description, proposalForm.duration);
-    setProposalForm({ description: '', duration: '' });
+    
+    try {
+      setLoading(true);
+      await createProposal(proposalForm.description, proposalForm.duration);
+      setProposalForm({ description: '', duration: '' });
+      // Refresh proposals after creating
+      await fetchProposals();
+    } catch (error) {
+      console.error('Error creating proposal:', error);
+      alert('Failed to create proposal');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleVote = async () => {
@@ -19,18 +39,30 @@ export const DAO = ({ proposals, loading, onCreateProposal, onVote, onRefreshPro
       alert('Please enter a proposal ID');
       return;
     }
-    await onVote(voteForm.proposalId, voteForm.support);
-    setVoteForm({ proposalId: '', support: true });
+    
+    try {
+      setLoading(true);
+      await vote(voteForm.proposalId, voteForm.support);
+      setVoteForm({ proposalId: '', support: true });
+      // Refresh proposals after voting
+      await fetchProposals();
+    } catch (error) {
+      console.error('Error voting:', error);
+      alert('Failed to cast vote');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const formatAddress = (address) => {
-    if (!address) return 'Unknown';
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
-
-  const formatTimestamp = (timestamp) => {
-    if (!timestamp) return 'Unknown';
-    return new Date(timestamp * 1000).toLocaleDateString();
+  const handleRefresh = async () => {
+    try {
+      setLoading(true);
+      await fetchProposals();
+    } catch (error) {
+      console.error('Error refreshing proposals:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -148,7 +180,7 @@ export const DAO = ({ proposals, loading, onCreateProposal, onVote, onRefreshPro
             Active Proposals
           </h2>
           <button
-            onClick={onRefreshProposals}
+            onClick={handleRefresh}
             disabled={loading}
             className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -161,7 +193,7 @@ export const DAO = ({ proposals, loading, onCreateProposal, onVote, onRefreshPro
         </div>
         
         <div className="space-y-4">
-          {proposals.length > 0 ? proposals.map((proposal) => (
+          {proposals && proposals.length > 0 ? proposals.map((proposal) => (
             <div key={proposal.id} className="bg-gray-700/50 rounded-lg p-6 border border-purple-500/20">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -169,10 +201,10 @@ export const DAO = ({ proposals, loading, onCreateProposal, onVote, onRefreshPro
                   <p className="text-gray-300 mb-3">{proposal.description}</p>
                   <div className="flex items-center space-x-4 text-sm">
                     <span className="text-gray-400">
-                      Creator: {formatAddress(proposal.creator)}
+                      Creator: {formatAddress ? formatAddress(proposal.creator) : proposal.creator}
                     </span>
                     <span className="text-gray-400">
-                      Deadline: {formatTimestamp(proposal.deadline)}
+                      Deadline: {formatTimestamp ? formatTimestamp(proposal.deadline) : new Date(proposal.deadline * 1000).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
