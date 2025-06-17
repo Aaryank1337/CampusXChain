@@ -264,14 +264,7 @@ const CampusXChainApp = () => {
 
               {activeTab === 'dao' && (
                 <DAO 
-                  createProposal={createProposal}
-                  vote={vote}
-                  proposals={proposals}
-                  fetchProposals={fetchProposals}
-                  loading={loading}
-                  setLoading={setLoading}
-                  formatAddress={formatAddress}
-                  formatTimestamp={formatTimestamp}
+                  
                 />
               )}
                             {activeTab === 'event' && (
