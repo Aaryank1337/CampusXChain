@@ -275,7 +275,9 @@ const CampusXChainApp = () => {
                 />
               )}
                             {activeTab === 'event' && (
-                <EventManagement /> )}
+                <EventManagement 
+                isOwner={isOwner}
+                /> )}
 
             </div>
           </div>
