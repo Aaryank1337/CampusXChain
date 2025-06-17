@@ -137,6 +137,22 @@ export const Web3Provider = ({ children }) => {
     }
   };
 
+  const transferTokens = async (to, amount) => {
+  if (!campToken) {
+    throw new Error("CampToken contract not initialized");
+  }
+
+  try {
+    const parsedAmount = ethers.parseUnits(amount.toString(), 18);
+    const tx = await campToken.transfer(to, parsedAmount);
+    await tx.wait();
+    return tx;
+  } catch (error) {
+    console.error("Transfer error:", error);
+    throw error;
+  }
+};
+
   const payFees = async (amount) => {
     if (!campToken || !feeManager) {
       throw new Error("Contracts not initialized");
@@ -276,6 +292,7 @@ export const Web3Provider = ({ children }) => {
         getEventName,
         getUserNFTs,
         getProposal,
+        transferTokens,
       }}
     >
       {children}
