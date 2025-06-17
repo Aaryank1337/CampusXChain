@@ -272,6 +272,75 @@ export const Web3Provider = ({ children }) => {
     }
   };
 
+  // Add these functions to your Web3Context
+
+const fetchProposals = async () => {
+  if (!campusDAO) {
+    throw new Error("CampusDAO contract not initialized");
+  }
+  
+  try {
+    // Get the total number of proposals
+    const proposalCount = await campusDAO.proposalCount();
+    const proposals = [];
+    const count = Number(proposalCount);
+    
+    // Fetch each proposal (usually 0-indexed, but check if your contract starts from 1)
+    for (let i = 0; i < count; i++) {
+      try {
+        const proposal = await campusDAO.getProposal(i);
+        if (proposal && proposal.description) { // Only add valid proposals
+          proposals.push({
+            id: i,
+            description: proposal.description,
+            creator: proposal.creator,
+            deadline: proposal.deadline,
+            forVotes: proposal.forVotes.toString(),
+            againstVotes: proposal.againstVotes.toString(),
+            abstainVotes: proposal.abstainVotes.toString(),
+            executed: proposal.executed
+          });
+        }
+      } catch (error) {
+        console.error(`Error fetching proposal ${i}:`, error);
+      }
+    }
+    
+    return proposals;
+  } catch (error) {
+    console.error("Fetch proposals error:", error);
+    throw error;
+  }
+};
+
+const getProposalCount = async () => {
+  if (!campusDAO) {
+    throw new Error("CampusDAO contract not initialized");
+  }
+  
+  try {
+    const count = await campusDAO.proposalCount();
+    return count.toString();
+  } catch (error) {
+    console.error("Get proposal count error:", error);
+    return "0";
+  }
+};
+
+// Add these to your Web3Context provider value:
+return (
+  <Web3Context.Provider
+    value={{
+      // ... existing values
+      fetchProposals,
+      getProposalCount,
+      // ... rest of your values
+    }}
+  >
+    {children}
+  </Web3Context.Provider>
+);
+
   return (
     <Web3Context.Provider
       value={{

@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { Gift, Send, Loader } from 'lucide-react';
 
-export const Tokens = ({ isOwner, loading, onAirdrop, onTransfer }) => {
+const Tokens = ({ 
+  airdropTokens, 
+  transferTokens, 
+  fetchUserData, 
+  loading, 
+  setLoading, 
+  isOwner 
+}) => {
   const [airdropForm, setAirdropForm] = useState({ address: '', amount: '' });
   const [transferForm, setTransferForm] = useState({ address: '', amount: '' });
 
@@ -10,8 +17,18 @@ export const Tokens = ({ isOwner, loading, onAirdrop, onTransfer }) => {
       alert('Please fill in all fields');
       return;
     }
-    await onAirdrop(airdropForm.address, airdropForm.amount);
-    setAirdropForm({ address: '', amount: '' });
+    
+    try {
+      setLoading(true);
+      await airdropTokens(airdropForm.address, airdropForm.amount);
+      setAirdropForm({ address: '', amount: '' });
+      await fetchUserData(); // Refresh user data after airdrop
+    } catch (error) {
+      console.error('Airdrop failed:', error);
+      alert('Airdrop failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleTransfer = async () => {
@@ -19,8 +36,18 @@ export const Tokens = ({ isOwner, loading, onAirdrop, onTransfer }) => {
       alert('Please fill in all fields');
       return;
     }
-    await onTransfer(transferForm.address, transferForm.amount);
-    setTransferForm({ address: '', amount: '' });
+    
+    try {
+      setLoading(true);
+      await transferTokens(transferForm.address, transferForm.amount);
+      setTransferForm({ address: '', amount: '' });
+      await fetchUserData(); // Refresh user data after transfer
+    } catch (error) {
+      console.error('Transfer failed:', error);
+      alert('Transfer failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
