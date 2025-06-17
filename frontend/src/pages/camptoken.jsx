@@ -16,6 +16,7 @@ import Tokens from '../components/Tokens';
 import Fees from '../components/Fees';
 import NFTs from '../components/NFTs';
 import DAO from '../components/DAO';
+import EventManagement from '../components/EventManagement';
 
 const CampusXChainApp = () => {
   const {
@@ -216,6 +217,7 @@ const CampusXChainApp = () => {
               <TabButton id="nfts" label="NFTs" icon={Award} active={activeTab === 'nfts'} onClick={setActiveTab} />
               <TabButton id="fees" label="Fees" icon={CreditCard} active={activeTab === 'fees'} onClick={setActiveTab} />
               <TabButton id="dao" label="DAO" icon={Vote} active={activeTab === 'dao'} onClick={setActiveTab} />
+              <TabButton id="event" label="Event" icon={Vote} active={activeTab === 'event'} onClick={setActiveTab} />
             </div>
 
             <div className="space-y-8">
@@ -271,6 +273,9 @@ const CampusXChainApp = () => {
                   formatTimestamp={formatTimestamp}
                 />
               )}
+                            {activeTab === 'event' && (
+                <EventManagement /> )}
+
             </div>
           </div>
         )}
