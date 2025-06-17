@@ -83,72 +83,13 @@ const Navbar = () => {
             </span>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item, index) => (
-              <div key={index} className="relative group">
-                {item.dropdown ? (
-                  <div>
-                    <button 
-                      className="flex items-center space-x-1 text-gray-300 hover:text-white transition-colors duration-200 py-2"
-                      onMouseEnter={() => toggleDropdown(index)}
-                    >
-                      <span>{item.name}</span>
-                      <ChevronDown className="w-4 h-4" />
-                    </button>
-                    
-                    {/* Dropdown Menu */}
-                    <div 
-                      className={`absolute top-full left-0 mt-2 w-64 bg-gray-800/95 backdrop-blur-lg rounded-xl border border-white/10 shadow-2xl transition-all duration-300 ${
-                        activeDropdown === index ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'
-                      }`}
-                      onMouseLeave={() => setActiveDropdown(null)}
-                    >
-                      <div className="p-2">
-                        {item.dropdown.map((dropItem, dropIndex) => (
-                          <a
-                            key={dropIndex}
-                            href={dropItem.href}
-                            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-colors duration-200 group"
-                          >
-                            <div className="text-purple-400 group-hover:text-purple-300">
-                              {dropItem.icon}
-                            </div>
-                            <span className="text-gray-300 group-hover:text-white">
-                              {dropItem.name}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ) : item.isLink ? (
-  <Link
-    to={item.to}
-    className="text-gray-300 hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-purple-500 after:to-blue-500 hover:after:w-full after:transition-all after:duration-300"
-  >
-    {item.name}
-  </Link>
-) : (
-  <a
-    href={item.href}
-    className="text-gray-300 hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-purple-500 after:to-blue-500 hover:after:w-full after:transition-all after:duration-300"
-  >
-    {item.name}
-  </a>
-)}
-                
-              </div>
-            ))}
-          </div>
+          
+         
 
-          {/* Right Side Actions */}
+          
           <div className="hidden md:flex items-center space-x-4">
-            {/* Notifications */}
-            <button className="p-2 text-gray-400 hover:text-white transition-colors duration-200 relative">
-              <Bell className="w-5 h-5" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-500 rounded-full animate-pulse" />
-            </button>
+            
+            
 
             {/* Wallet Connection */}
             {walletConnected ? (
