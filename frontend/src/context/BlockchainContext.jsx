@@ -328,18 +328,7 @@ const getProposalCount = async () => {
 };
 
 // Add these to your Web3Context provider value:
-return (
-  <Web3Context.Provider
-    value={{
-      // ... existing values
-      fetchProposals,
-      getProposalCount,
-      // ... rest of your values
-    }}
-  >
-    {children}
-  </Web3Context.Provider>
-);
+
 
   return (
     <Web3Context.Provider
