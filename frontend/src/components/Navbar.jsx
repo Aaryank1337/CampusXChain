@@ -16,6 +16,7 @@ import {
   Shield
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
@@ -53,7 +54,7 @@ const Navbar = () => {
         { name: 'P2P Marketplace', icon: <ShoppingBag className="w-4 h-4" />, href: '#marketplace' }
       ]
     },
-    { name: 'Campus', href: '#campus' },
+    { name: 'Campus', to: '/camp', isLink: true },
     { name: 'Community', href: '#community' },
     { name: 'Docs', href: '#docs' }
   ];
@@ -121,14 +122,22 @@ const Navbar = () => {
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <a 
-                    href={item.href}
-                    className="text-gray-300 hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-purple-500 after:to-blue-500 hover:after:w-full after:transition-all after:duration-300"
-                  >
-                    {item.name}
-                  </a>
-                )}
+                ) : item.isLink ? (
+  <Link
+    to={item.to}
+    className="text-gray-300 hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-purple-500 after:to-blue-500 hover:after:w-full after:transition-all after:duration-300"
+  >
+    {item.name}
+  </Link>
+) : (
+  <a
+    href={item.href}
+    className="text-gray-300 hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-purple-500 after:to-blue-500 hover:after:w-full after:transition-all after:duration-300"
+  >
+    {item.name}
+  </a>
+)}
+                
               </div>
             ))}
           </div>
