@@ -142,7 +142,8 @@ const Homepage = () => {
             <button className="group px-8 py-4 bg-gray-800/80 backdrop-blur-sm rounded-full text-lg font-semibold hover:bg-gray-700/80 transition-all duration-300 border border-gray-600/50">
               <span className="flex items-center space-x-2">
                 <Play className="w-5 h-5" />
-                <span>Watch Demo</span>
+                <Link to="/camp"><span>Dashboard</span></Link>
+                
               </span>
             </button>
           </div>
