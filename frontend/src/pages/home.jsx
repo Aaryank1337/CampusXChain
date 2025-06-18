@@ -96,15 +96,14 @@ const Homepage = () => {
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-blue-600/8 rounded-full blur-2xl animate-bounce" />
         <div className="absolute bottom-1/4 left-1/4 w-48 h-48 bg-cyan-600/10 rounded-full blur-xl animate-pulse" />
         
-        {/* Subtle grid pattern */}
-        {/* <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%236366f1" fill-opacity="0.03"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40" /> */}
+    
       </div>
 
       {/* Hero Section */}
       <section className="relative z-10 min-h-screen flex items-center justify-center px-6">
         <div className="max-w-6xl mx-auto text-center">
           {/* Logo Animation */}
-          <div className="mb-8 relative">
+          {/* <div className="mb-8 relative">
             <div className="inline-flex items-center space-x-3 p-4 bg-gray-900/80 backdrop-blur-lg rounded-2xl border border-gray-700/50 shadow-2xl">
               <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl flex items-center justify-center animate-spin-slow shadow-lg">
                 <Zap className="w-6 h-6 text-white" />
@@ -113,7 +112,7 @@ const Homepage = () => {
                 CampusXChain
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Main Heading */}
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">

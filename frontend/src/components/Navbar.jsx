@@ -74,7 +74,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-3 group cursor-pointer">
+          <div className="flex items-center space-x-3 group cursor-pointer flex-shrink-0">
             <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <Zap className="w-5 h-5 text-white animate-pulse" />
             </div>
@@ -83,11 +83,11 @@ const Navbar = () => {
             </span>
           </div>
 
-          
-         
+          {/* Spacer - This creates the extra space between left and right sections */}
+          <div className="flex-1"></div>
 
           
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-6">
             
             
 
@@ -110,7 +110,7 @@ const Navbar = () => {
             )}
 
             {/* User Info Desktop */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-7">
               {/* User Details */}
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-300">{userProfile?.name || user.displayName}</p>
