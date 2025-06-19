@@ -13,10 +13,10 @@ import {
 import Navbar from '../components/Navbar';
 import Dashboard from '../components/Dashboard';
 import Tokens from '../components/Tokens';
-import Fees from '../components/Fees';
 import NFTs from '../components/NFTs';
 import DAO from '../components/DAO';
 import EventManagement from '../components/EventManagement';
+import FeePayment from '../components/Fees'; // Import the FeePayment component
 
 const CampusXChainApp = () => {
   const {
@@ -33,7 +33,7 @@ const CampusXChainApp = () => {
     createProposal,
     vote,
     getUserNFTs,
-    getPaymentStatus // Import the correct function name
+    getPaymentStatus
   } = useWeb3();
 
   const { isConnected, connectWallet } = useWallet();
@@ -42,7 +42,7 @@ const CampusXChainApp = () => {
   const [campBalance, setCampBalance] = useState('0');
   const [userNFTs, setUserNFTs] = useState([]);
   const [proposals, setProposals] = useState([]);
-  const [paymentStatus, setPaymentStatus] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState({ isPaid: false, amount: '0' });
   const [loading, setLoading] = useState(false);
   const [proposalCount, setProposalCount] = useState(0);
   const [isOwner, setIsOwner] = useState(false);
@@ -72,9 +72,16 @@ const CampusXChainApp = () => {
       }
       
       if (feeManager && account && getPaymentStatus) {
-        // Use the correct function name from context
-        const status = await getPaymentStatus(account);
-        setPaymentStatus(status);
+        try {
+          const [isPaid, paidAmount] = await getPaymentStatus(account);
+          setPaymentStatus({
+            isPaid,
+            amount: paidAmount ? (Number(paidAmount) / 1e18).toFixed(2) : '0'
+          });
+        } catch (error) {
+          console.error('Error fetching payment status:', error);
+          setPaymentStatus({ isPaid: false, amount: '0' });
+        }
       }
 
       if (campusDAO) {
@@ -198,8 +205,12 @@ const CampusXChainApp = () => {
                   <div className="text-gray-400 text-sm">Token Balance</div>
                 </div>
                 <div className="text-center p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
-                  <div className={`text-2xl font-bold ${paymentStatus ? 'text-green-400' : 'text-red-400'}`}>
-                    {loading ? <Loader className="w-6 h-6 animate-spin mx-auto" /> : (getPaymentStatus ? 'Paid' : 'Pending')}
+                  <div className={`text-2xl font-bold ${paymentStatus.isPaid ? 'text-green-400' : 'text-red-400'}`}>
+                    {loading ? (
+                      <Loader className="w-6 h-6 animate-spin mx-auto" />
+                    ) : (
+                      paymentStatus.isPaid ? `Paid (${paymentStatus.amount} CAMP)` : 'Not Paid'
+                    )}
                   </div>
                   <div className="text-gray-400 text-sm">Fee Status</div>
                 </div>
@@ -242,17 +253,11 @@ const CampusXChainApp = () => {
               )}
 
               {activeTab === 'fees' && (
-                <Fees 
-                  account={account}
-                  payFees={payFees}
-                  fetchUserData={fetchUserData}
-                  loading={loading}
-                  setLoading={setLoading}
-                  getPaymentStatus={getPaymentStatus}
-                  campBalance={campBalance}
-                  paymentStatus={paymentStatus}
-                  setPaymentStatus={setPaymentStatus}
-                />
+                
+                  <div className="max-w-2xl mx-auto">
+                    <FeePayment onPaymentSuccess={fetchUserData} />
+                  </div>
+                
               )}
 
               {activeTab === 'nfts' && (
@@ -266,10 +271,9 @@ const CampusXChainApp = () => {
               )}
 
               {activeTab === 'dao' && (
-                <DAO 
-                  
-                />
+                <DAO />
               )}
+              
               {activeTab === 'event' && (
                 <EventManagement 
                   isOwner={isOwner}
