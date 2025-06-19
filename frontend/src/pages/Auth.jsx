@@ -40,39 +40,39 @@ const Auth = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-black">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>
+          <p className="text-purple-200">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-black p-4">
+      <div className="bg-gray-800 border border-purple-700 rounded-2xl shadow-2xl shadow-purple-500/20 p-8 w-full max-w-md backdrop-blur-sm">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/30">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-           Hello Bachoooooo!!!!!!
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+           CampusXChain
           </h1>
-          <p className="text-gray-600 mt-2">
+          {/* <p className="text-purple-200 mt-2">
             Paise Udao Majje Karooo 🥳🥳
-          </p>
+          </p> */}
         </div>
 
         {/* Toggle Login/Signup */}
-        <div className="flex rounded-xl bg-gray-100 p-1 mb-8">
+        <div className="flex rounded-xl bg-gray-700 border border-purple-600/30 p-1 mb-8">
           <button
             onClick={() => switchView('login')}
             className={`flex-1 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
               currentView === 'login' 
-                ? 'bg-white text-blue-600 shadow-md transform scale-105' 
-                : 'text-gray-600 hover:text-gray-800'
+                ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg shadow-purple-500/20 transform scale-105' 
+                : 'text-purple-200 hover:text-white hover:bg-gray-600/50'
             }`}
           >
             Login
@@ -81,8 +81,8 @@ const Auth = () => {
             onClick={() => switchView('signup')}
             className={`flex-1 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
               currentView === 'signup' 
-                ? 'bg-white text-blue-600 shadow-md transform scale-105' 
-                : 'text-gray-600 hover:text-gray-800'
+                ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg shadow-purple-500/20 transform scale-105' 
+                : 'text-purple-200 hover:text-white hover:bg-gray-600/50'
             }`}
           >
             Sign Up
@@ -91,10 +91,10 @@ const Auth = () => {
 
         {/* Success/Error Messages */}
         {message.text && (
-          <div className={`mb-6 p-4 rounded-lg text-sm ${
+          <div className={`mb-6 p-4 rounded-lg text-sm border ${
             message.type === 'success' 
-              ? 'bg-green-50 border border-green-200 text-green-700' 
-              : 'bg-red-50 border border-red-200 text-red-700'
+              ? 'bg-green-900/50 border-green-500/50 text-green-300 shadow-lg shadow-green-500/10' 
+              : 'bg-red-900/50 border-red-500/50 text-red-300 shadow-lg shadow-red-500/10'
           }`}>
             {message.text}
           </div>
@@ -111,13 +111,13 @@ const Auth = () => {
 
         {/* Footer */}
         <div className="mt-8 text-center">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-purple-300">
             {currentView === 'login' ? (
               <>
                 Don't have an account?{' '}
                 <button
                   onClick={() => switchView('signup')}
-                  className="text-blue-600 hover:text-blue-700 font-medium"
+                  className="text-purple-400 hover:text-purple-300 font-medium transition-colors duration-200"
                 >
                   Sign up here
                 </button>
@@ -127,7 +127,7 @@ const Auth = () => {
                 Already have an account?{' '}
                 <button
                   onClick={() => switchView('login')}
-                  className="text-blue-600 hover:text-blue-700 font-medium"
+                  className="text-purple-400 hover:text-purple-300 font-medium transition-colors duration-200"
                 >
                   Login here
                 </button>

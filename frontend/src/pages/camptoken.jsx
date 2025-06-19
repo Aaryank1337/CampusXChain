@@ -71,7 +71,7 @@ const CampusXChainApp = () => {
         setUserNFTs(Array.isArray(nfts) ? nfts : []);
       }
       
-      if (feeManager && account) {
+      if (feeManager && account && getPaymentStatus) {
         // Use the correct function name from context
         const status = await getPaymentStatus(account);
         setPaymentStatus(status);
@@ -199,7 +199,7 @@ const CampusXChainApp = () => {
                 </div>
                 <div className="text-center p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
                   <div className={`text-2xl font-bold ${paymentStatus ? 'text-green-400' : 'text-red-400'}`}>
-                    {loading ? <Loader className="w-6 h-6 animate-spin mx-auto" /> : (paymentStatus ? 'Paid' : 'Pending')}
+                    {loading ? <Loader className="w-6 h-6 animate-spin mx-auto" /> : (getPaymentStatus ? 'Paid' : 'Pending')}
                   </div>
                   <div className="text-gray-400 text-sm">Fee Status</div>
                 </div>
@@ -243,12 +243,15 @@ const CampusXChainApp = () => {
 
               {activeTab === 'fees' && (
                 <Fees 
+                  account={account}
                   payFees={payFees}
                   fetchUserData={fetchUserData}
                   loading={loading}
                   setLoading={setLoading}
-                  paymentStatus={paymentStatus}
+                  getPaymentStatus={getPaymentStatus}
                   campBalance={campBalance}
+                  paymentStatus={paymentStatus}
+                  setPaymentStatus={setPaymentStatus}
                 />
               )}
 
@@ -267,11 +270,11 @@ const CampusXChainApp = () => {
                   
                 />
               )}
-                            {activeTab === 'event' && (
+              {activeTab === 'event' && (
                 <EventManagement 
-                isOwner={isOwner}
-                /> )}
-
+                  isOwner={isOwner}
+                />
+              )}
             </div>
           </div>
         )}
